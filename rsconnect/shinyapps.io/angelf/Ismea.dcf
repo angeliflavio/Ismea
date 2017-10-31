@@ -1,0 +1,13 @@
+name: Ismea
+title: Ismea
+username:
+account: angelf
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 230986
+bundleId: 1053829
+url: https://angelf.shinyapps.io/Ismea/
+when: 1509475649.08362
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: prezzi.xlsx|prezzivarieta.xlsx
