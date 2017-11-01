@@ -23,7 +23,7 @@ dashboardPage(
                         box(width = 12,background = 'light-blue',
                             flowLayout(
                                 selectInput('prodotto','Prodotto',
-                                            choices = c('Tutti','Mele','Pere')),
+                                            choices = c('Tutti','Mele','Pere','Uva','Kiwi','Pesche','Nettarine')),
                                 selectInput('piazza','Piazza',
                                             choices = c('Tutte',unique(prices$Piazza)))
                             )
@@ -36,7 +36,7 @@ dashboardPage(
                     verticalLayout(
                         box(width = 4,background = 'light-blue',
                             selectInput('prodottopmedi','Prodotto',
-                                        choices = c('Tutti','Mele','Pere'))),
+                                        choices = c('Tutti','Mele','Pere','Uva','Susine','Albicocche','Ciliegie','Kiwi','Fragole'))),
                         tabBox(width = 12,
                                tabPanel('Per Prodotto',dataTableOutput('pmedi')),
                                tabPanel('Per Varieta',dataTableOutput('pmedivarieta'))
@@ -47,7 +47,7 @@ dashboardPage(
                     verticalLayout(
                         box(width = 4,background = 'light-blue',
                             selectInput('prodottoproduzione','Prodotto',
-                                        choices = c('Mele','Pere','Uve da tavola','Ciliege ')))
+                                        choices = c('Mele','Pere','Uve da tavola','Ciliegie ')))
                     ))
         )
     )
