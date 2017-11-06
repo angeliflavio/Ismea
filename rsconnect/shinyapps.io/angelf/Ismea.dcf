@@ -5,9 +5,9 @@ account: angelf
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 230986
-bundleId: 1058126
+bundleId: 1062067
 url: https://angelf.shinyapps.io/Ismea/
-when: 1509733654.46004
+when: 1510008540.24258
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: prezzi.xlsx|prezzivarieta.xlsx
+ignoredFiles: prezzi.xlsx|prezzivarieta.xlsx|README.md

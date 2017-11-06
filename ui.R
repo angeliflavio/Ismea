@@ -8,6 +8,10 @@ library(plotly)
 web <- read_html('http://www.ismeamercati.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/2977#MenuV')
 prices <- html_table(web)[[1]]
 
+# get FAO data from csv files
+apple <- read.csv('apple.csv',sep = ',')
+wine <- read.csv('wine.csv',sep = ',')
+
 dashboardPage(
     dashboardHeader(title = 'ISMEA Mercati',
                     dropdownMenu(type = 'notification',headerText = ' ',
@@ -17,13 +21,138 @@ dashboardPage(
                                                   icon = icon('github')))),
     dashboardSidebar(
         sidebarMenu(
-            menuItem('Prezzi per piazza',tabName = 'prezzipiazza'),
-            menuItem('Prezzi medi',tabName = 'prezzimedi'),
-            menuItem('Dati mercato',tabName = 'produzione')
+            menuItem('FAO Dati Globali Mele',tabName = 'faomele'),
+            menuItem('FAO Dati Globali Vino',tabName = 'faovino'),
+            menuItem('ISMEA Prezzi per piazza Italia',tabName = 'prezzipiazza'),
+            menuItem('ISMEA Prezzi medi Italia',tabName = 'prezzimedi'),
+            menuItem('ISMEA Dati mercato Italia',tabName = 'produzione')
         )
     ),
     dashboardBody(
         tabItems(
+            tabItem('faomele',
+                    tabsetPanel(
+                        tabPanel('Mappa',
+                                 br(),
+                                 verticalLayout(
+                                     box(background = 'navy',width = 12,
+                                         flowLayout(
+                                             selectInput('measuremap','Misura',
+                                                         choices = c('Produzione (ton)'= 'Production',
+                                                                     'Superficie (ettari)'='Area harvested',
+                                                                     'Resa (hg/ettaro)'='Yield'),
+                                                         selected = 'Produzione'),
+                                             selectInput('yearmap','Anno',
+                                                         choices = seq(1961,2014),selected = 2014)
+                                         ),
+                                         tags$a(href='http://www.fao.org','Fonte FAO') 
+                                     ),
+                                     box(width = 12,
+                                         br(),
+                                         htmlOutput('worldmap'))
+                                 )
+                        ),
+                        tabPanel('Grafico',
+                                 br(),
+                                 verticalLayout(
+                                     box(width = 4,background = 'navy',
+                                         selectInput('countryapplemotion','Paesi',
+                                                     choices = c('Tutti',as.vector(unique(apple$Area))),
+                                                     selected = 'Tutti',
+                                                     multiple = T),
+                                         bsTooltip('countryapplemotion','Selezione singola o multipla',
+                                                   options = list(container = "body")),
+                                         br(),
+                                         tags$a(href='http://www.fao.org','Fonte FAO')
+                                     ),
+                                     box(width = 12,
+                                         htmlOutput('motionapple')
+                                     )
+                                 )
+                        ),
+                        tabPanel('Grafico storico',
+                                 br(),
+                                 verticalLayout(
+                                     box(width = 12,background = 'navy',
+                                         flowLayout(
+                                             selectInput('measuretimeline','Misura',
+                                                         choices = c('Produzione (ton)'= 'Production',
+                                                                     'Superficie (ettari)'='Area harvested',
+                                                                     'Resa (hg/ettaro)'='Yield'),
+                                                         selected = 'Produzione (ton)'),
+                                             selectInput('countrytimeline','Paesi',
+                                                         choices = as.vector(unique(apple$Area)),
+                                                         selected = 'Italy',
+                                                         multiple = T),
+                                             bsTooltip('countrytimeline','Selezione singola o multipla',
+                                                       options = list(container = "body"))
+                                         ),
+                                         tags$a(href='http://www.fao.org','Fonte FAO')
+                                     ),
+                                     box(width = 12,
+                                         htmlOutput('timeline'))
+                                 )
+                        ),
+                        tabPanel('Tabella',
+                                 br(),
+                                 dataTableOutput('table'))
+                    )
+                    ),
+            tabItem('faovino',
+                    tabsetPanel(
+                        tabPanel('Mappa',
+                                 br(),
+                                 verticalLayout(
+                                     box(width = 4,background = 'navy',
+                                         selectInput('yearmapwine','Anno',
+                                                     choices = seq(1961,2014),selected = 2014),
+                                         br(),
+                                         tags$a(href='http://www.fao.org','Fonte FAO')
+                                     ),
+                                     box(width = 12,
+                                         br(),
+                                         htmlOutput('worldmapwine'))
+                                 )),
+                        tabPanel('Grafico',
+                                 br(),
+                                 verticalLayout(
+                                     box(width = 4,background = 'navy',
+                                         selectInput('countrywinemotion','Paesi',
+                                                     choices = c('Tutti',as.vector(unique(wine$Area))),
+                                                     selected = 'Tutti',
+                                                     multiple = T),
+                                         bsTooltip('countrywinemotion','Selezione singola o multipla',
+                                                   options = list(container = "body")),
+                                         br(),
+                                         tags$a(href='http://www.fao.org','Fonte FAO')
+                                     ),
+                                     box(width = 12,
+                                         br(),
+                                         htmlOutput('motionwine')
+                                     )
+                                 )),
+                        tabPanel('Grafico storico',
+                                 br(),
+                                 verticalLayout(
+                                     box(width = 4,background = 'navy',
+                                         selectInput('countrytimelinewine','Paesi',
+                                                     choices = as.vector(unique(wine$Area)),
+                                                     selected = 'Italy',
+                                                     multiple = T),
+                                         bsTooltip('countrytimelinewine','Selezione singola o multipla',
+                                                   options = list(container = "body")),
+                                         br(),
+                                         tags$a(href='http://www.fao.org','Fonte FAO')
+                                     ),
+                                     box(width = 12,
+                                         br(),
+                                         htmlOutput('timelinewine'))
+                                 )),
+                        tabPanel('Tabella',
+                                 br(),
+                                 dataTableOutput('tablewine'))
+                    )
+                    ),
             tabItem('prezzipiazza',
                     verticalLayout(
                         box(width = 12,background = 'navy',
